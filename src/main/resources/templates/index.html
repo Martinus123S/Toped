@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link href="../static/index.css" rel="stylesheet" th:href="@{/index.css}">
+    <title>Autentikasi Toped App</title>
+</head>
+<body>
+<div class="container login-container">
+
+    <div class="row">
+        <div class="col-md-6 login-form-1">
+            <h3>Login</h3>
+            <div th:if="${notVerify!=null}">
+                <div class="alert alert-warning alert-dismissible" role="alert">
+                    <strong th:text="${notVerify}"></strong>
+                </div>
+            </div>
+            <form th:action="@{/login}" method="post">
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Your Email *" name="username" value="" />
+                </div>
+                <div class="form-group">
+                    <input type="password" class="form-control" placeholder="Your Password *" name="password" value="" />
+                </div>
+                <div class="form-group">
+                    <input type="submit" class="btnSubmit" value="Login" />
+                </div>
+            </form>
+        </div>
+        <div class="col-md-6 login-form-2">
+            <h3>Register</h3>
+            <div th:if="${notMatch!=null}">
+                <div class="alert alert-warning alert-dismissible" role="alert">
+                    <strong th:text="${notMatch}"></strong>
+                </div>
+            </div>
+            <div th:if="${notRegister!=null}">
+                <div class="alert alert-warning alert-dismissible" role="alert">\
+                    <strong th:text="${notRegister}"></strong>
+                </div>
+            </div>
+            <div th:if="${isRegister!=null}">
+                <div class="alert alert-success alert-dismissible" role="alert">\
+                    <strong th:text="${isRegister}"></strong>
+                </div>
+            </div>
+            <form th:action="@{/register}" method="post">
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Your Username*" name="username" required/>
+                </div>
+                <div class="form-group">
+                    <input type="password" class="form-control" placeholder="Your Password *" name="password" required/>
+                </div>
+                <div class="form-group">
+                    <input type="password" class="form-control" placeholder="Your Password *" name="passwordConfirmation" required/>
+                </div>
+                <div class="form-group">
+                    <input type="submit" class="btnSubmit" value="Register" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+<script>
+    $(document).ready(function() {
+        window.setTimeout(function() {
+            $(".alert").fadeTo(500, 0).slideUp(500, function(){
+                $(this).remove();
+            });
+        }, 1000);
+    });
+</script>
+</html>
