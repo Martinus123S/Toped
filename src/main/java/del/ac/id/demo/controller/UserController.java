@@ -62,7 +62,10 @@ public class UserController {
         if(user1!=null){
             HttpSession session = httpServletRequest.getSession();
             session.setAttribute("user",user1);
-            return new ModelAndView("redirect:/item");
+            if(user1.getRole() == 1){
+                return new ModelAndView("redirect:/item");
+            }
+            return new ModelAndView("redirect:/produk");
         }
         redirectAttributes.addFlashAttribute("notVerify","User tidak ditemukan");
         return new ModelAndView("redirect:/");

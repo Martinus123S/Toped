@@ -25,11 +25,23 @@ public class ItemController {
     ItemRepository itemRepository;
     @Autowired MongoTemplate mongoTemplate;
     @RequestMapping("/item")
-    public ModelAndView item(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse){
+    public ModelAndView home(HttpServletRequest httpServletRequest,HttpServletResponse httpServletResponse){
         if(httpServletRequest.getSession().getAttribute("user")==null){
             return new ModelAndView("redirect:/");
         }
         List<Item> items = itemRepository.findAll();
+        ModelAndView mv = new ModelAndView("item");
+        mv.addObject("items",items);
+        return mv;
+    }
+    @RequestMapping("/item/{name}")
+    public ModelAndView item(@PathVariable("name")String name,HttpServletRequest httpServletRequest,
+                             HttpServletResponse httpServletResponse){
+        if(httpServletRequest.getSession().getAttribute("user")==null){
+            return new ModelAndView("redirect:/");
+        }
+        Query query = new Query(Criteria.where("store_name").is(name));
+        List<Item> items = mongoTemplate.find(query,Item.class);
         ModelAndView mv = new ModelAndView("item");
         mv.addObject("items",items);
         return mv;
@@ -48,7 +60,10 @@ public class ItemController {
     }
     @RequestMapping(value = "/update",method = {RequestMethod.PUT,RequestMethod.GET})
     public ModelAndView update(Item item, ItemDetail itemDetail,
+                               @ModelAttribute("store_name") String store_name,
                                RedirectAttributes redirectAttributes, HttpSession response){
+
+        System.out.println(store_name);
         Query query = new Query(Criteria.where("id").is(item.getId()));
         Item item1 = mongoTemplate.findOne(query,Item.class);
         if(item1 != null){
@@ -72,15 +87,19 @@ public class ItemController {
                 update.set("rating",rating);
                 update.set("sold",sold);
                 mongoTemplate.updateFirst(query,update,Item.class);
-                return new ModelAndView("redirect:/item");
+                return new ModelAndView("redirect:/item/"+store_name);
             }
             redirectAttributes.addFlashAttribute("Stock","Stock Kurang Harap menunggu barang update");
-            return new ModelAndView("redirect:/item");
+
+            return new ModelAndView("redirect:/item/"+store_name);
         }
-        return new ModelAndView("redirect:/item");
+        return new ModelAndView("redirect:/item/"+store_name);
     }
     @GetMapping("/add")
     public ModelAndView add(HttpServletResponse httpServletResponse,HttpServletRequest httpServletRequest){
+        if(httpServletRequest.getSession().getAttribute("user")==null){
+            return new ModelAndView("redirect:/");
+        }
         return new ModelAndView("add");
     }
     @PostMapping("/add")
