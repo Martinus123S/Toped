@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <!------ Include the above in your HEAD tag ---------->
+    <link rel="stylesheet"
+          href="https://use.fontawesome.com/releases/v5.0.8/css/all.css">
+
+</head>
+<body>
+<h1>Welcome to Toped Commerce!</h1>
+<br>
+<a th:href="@{/logout}" class="btn btn-danger">Logout</a>
+<br>
+<h2>List Of Store</h2>
+<table class="table table-striped table-responsive-md">
+    <thead>
+    <tr>
+        <th>Nama Toko</th>
+        <th>Lokasi</th>
+        <th>Points</th>
+        <th>Reputation</th>
+        <th>Option</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="store : ${stores}">
+        <td th:text="${store.store_name}"></td>
+        <td th:text="${store.location}"></td>
+        <td th:text="${store.points}"></td>
+        <td th:text="${store.reputation}"></td>
+        <td>
+            <a th:if="${session.user.role == 2}" th:href="@{/item/{name}(name=${store.store_name})}" class="btn btn-primary">Lihat Item</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>
